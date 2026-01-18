@@ -19,14 +19,13 @@ void read_from_popen(const char *command) {
     // Read BUFFER number of bytes from the input
     fread(buffer, 1, sizeof(buffer), fp);
 
-    // Parse the integers and the remaining string from the buffer
-    sscanf(buffer, "%d %d %d %d %s", numbers, numbers + 1, numbers + 2, numbers + 3, buffer);
+    // Parse the integers from the buffer
+    sscanf(buffer, "%d %d %d %d", numbers, numbers + 1, numbers + 2, numbers + 3);
 
     // Sum the integers to show that they were correctly parsed
     int sum = numbers[0] + numbers[1] + numbers[2] + numbers[3];
 
     printf("Sum: %d\n", sum);
-    printf("%s\n", buffer);
 
     // Close the process
     pclose(fp);
@@ -34,7 +33,7 @@ void read_from_popen(const char *command) {
 
 // Example usage
 int main() {
-    const char *command = "echo '4 3 2 1 Blast off!'";
+    const char *command = "echo '4 3 2 1'";
     read_from_popen(command);
     return 0;
 }
