@@ -1,3 +1,5 @@
+all: gdb_example valgrind_example valgrind_exercise_source gdb_exercise gdb_exercise_soln
+
 gdb_example: gdb_example.c
 	gcc -g -o gdb_example gdb_example.c
 
