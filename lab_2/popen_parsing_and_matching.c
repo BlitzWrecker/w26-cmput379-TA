@@ -31,7 +31,7 @@ int main() {
             printf("Parsed: PID=%d, PPID=%d, User=%s, Executable=%s\n", pid, ppid, user, exe);
 
             // Example string matching: Look for "sshd" in the executable
-            if (strstr(exe, "sshd") != NULL) {
+            if (strstr(line, "paullu") != NULL) {
                 printf("  Match found for PID=%d with executable '%s'\n", pid, exe);
             }
         } else {
