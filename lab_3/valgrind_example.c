@@ -4,14 +4,14 @@
 #include <string.h>
 #include <errno.h>
 
-int check_args(int argc, char *argv[], int *start) {
+int check_args(int argc, char *argv[], int *num_elements) {
     if (argc != 2 || strlen(argv[1]) == 0) {
         return 1;
     }
 
     char *p = NULL;
     errno = 0;    // not 'int errno', because the '#include' already defined it
-    *start = (int)strtol(argv[1], &p, 10);
+    *num_elements = (int)strtol(argv[1], &p, 10);
     if (*p != '\0' || errno != 0) {
         return 1;
     }
@@ -21,7 +21,7 @@ int check_args(int argc, char *argv[], int *start) {
 int main(int argc, char *argv[]) {
     int num_elements = 0;
     if (check_args(argc, argv, &num_elements)) {
-        printf("Usage: ./example start\n");
+        printf("Usage: ./valgrind_example num_elements\n");
         return 1;
     }
 
