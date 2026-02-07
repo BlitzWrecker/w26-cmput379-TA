@@ -38,6 +38,9 @@ int main(int argc, char *argv[]) {
         printf("%d ", leak[i]);
     }
     printf("\n");
+    
+    // int* arr;
+    // arr[3] = 5;
 
     // Intentionally not freeing the allocated memory to demonstrate a leak
     // free(leak);
