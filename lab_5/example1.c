@@ -1,0 +1,35 @@
+// Original authors: Jake Tuero and Ali Rafiei
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+
+int main() {
+    int fd[2];  
+    char buffer[100];
+
+    if (pipe(fd) == -1) {
+        perror("pipe");
+        exit(EXIT_FAILURE);
+    }
+
+    pid_t pid = fork();
+    if (pid < 0) {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    }
+
+    if (pid == 0) {  // Child process
+        close(fd[0]);  // Close unused read end
+        char *message = "Hello from child!";
+        write(fd[1], message, strlen(message) + 1);
+        close(fd[1]);  // Close write end after writing
+        exit(EXIT_SUCCESS);
+    } else {  // Parent process
+        close(fd[1]);  // Close unused write end
+        read(fd[0], buffer, sizeof(buffer));
+        printf("Parent received: %s\n", buffer);
+        close(fd[0]);  // Close read end after reading
+    }
+    return 0;
+}
