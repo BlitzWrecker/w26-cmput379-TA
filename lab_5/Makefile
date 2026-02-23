@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Wall
-EXECUTABLES=example1 example2 example3 file_stdin file_stdout kv_storage_unidirectional kv_storage_bidirectional
+EXECUTABLES=example1 example2 example3 file_stdin file_stdout kv_storage_unidirectional kv_storage_bidirectional exercise_soln
 
 all: $(EXECUTABLES)
 
@@ -24,6 +24,9 @@ kv_storage_unidirectional: kv_storage_unidirectional.c
 
 kv_storage_bidirectional: kv_storage_bidirectional.c
 	$(CC) $(CFLAGS) kv_storage_bidirectional.c -o kv_storage_bidirectional
+
+exercise_soln: exercise_soln.c
+	$(CC) $(CFLAGS) exercise_soln.c -o exercise_soln
 
 clean:
 	rm -f $(EXECUTABLES)
