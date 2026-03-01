@@ -1,0 +1,18 @@
+EXECUTABLES = kv_storage_unidirectional_server kv_storage_unidirectional_client kv_storage_bidirectional_server kv_storage_bidirectional_client
+
+all: $(EXECUTABLES)
+
+kv_storage_unidirectional_server: kv_storage_unidirectional_server.c
+	gcc -o kv_storage_unidirectional_server kv_storage_unidirectional_server.c
+
+kv_storage_unidirectional_client: kv_storage_unidirectional_client.c
+	gcc -o kv_storage_unidirectional_client kv_storage_unidirectional_client.c
+
+kv_storage_bidirectional_server: kv_storage_bidirectional_server.c
+	gcc -o kv_storage_bidirectional_server kv_storage_bidirectional_server.c
+
+kv_storage_bidirectional_client: kv_storage_bidirectional_client.c
+	gcc -o kv_storage_bidirectional_client kv_storage_bidirectional_client.c
+
+clean:
+	rm -f $(EXECUTABLES)
