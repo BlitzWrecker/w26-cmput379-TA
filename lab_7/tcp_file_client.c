@@ -48,12 +48,13 @@ void call_socket(int socket_fd, const char *hostname, int port_number) {
 
 int main(int argc, char *argv[]) {
     // Check input args
-    if (argc < 3) {
-        printf("usage %s hostname port\n", argv[0]);
+    if (argc < 4) {
+        printf("usage %s hostname port out_file\n", argv[0]);
         exit(0);
     }
     const char *hostname = argv[1];
     int port_number = atoi(argv[2]);
+    const char *out_file = argv[3];
 
     // Open a socket
     int socket_fd = open_socket();
@@ -61,7 +62,7 @@ int main(int argc, char *argv[]) {
     // Call the server
     call_socket(socket_fd, hostname, port_number);
 
-    // Get message from server
+    // Get byte stream from server and write to file
     int bytes_read = 0;
     char buffer[1024];
     int img_file = open("received_file", O_WRONLY | O_CREAT, 0666);
@@ -72,6 +73,8 @@ int main(int argc, char *argv[]) {
     }
     close(socket_fd);
     close(img_file);
-    rename("received_file", "received_file.png");
+
+    // Rename the received file to a PNG file
+    rename("received_file", out_file);
     return 0;
 }

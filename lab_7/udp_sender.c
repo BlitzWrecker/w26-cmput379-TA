@@ -25,16 +25,19 @@ int open_socket() {
 
 int main(int argc, char *argv[]) {
     // Check input args
-    if (argc < 3) {
-        printf("usage %s port /path/to/file\n", argv[0]);
+    if (argc < 4) {
+        printf("usage %s hostname port /path/to/file\n", argv[0]);
         exit(0);
     }
-    int port_number = atoi(argv[1]);
-    const char *file_name = argv[2];
+    const char *hostname = argv[1];
+    int port_number = atoi(argv[2]);
+    const char *file_name = argv[3];
 
     FILE *pipe;
     unsigned char buffer[8192];
     char command[256];
+
+    // Use ffmpeg to read the audio file and output raw PCM data for streaming
     snprintf(command, sizeof(command), "ffmpeg -loglevel quiet -i %s -f s16le -acodec pcm_s16le -ac 2 -ar 44100 -", file_name);
 
     pipe = popen(command, "r");
@@ -53,14 +56,15 @@ int main(int argc, char *argv[]) {
     // Set the required fields
     recv_addr.sin_family = AF_INET;
     recv_addr.sin_port = htons((uint16_t)port_number);
-    recv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    recv_addr.sin_addr.s_addr = inet_addr(hostname);
 
     while (1) {
         size_t n = fread(buffer, 1, sizeof(buffer), pipe);
         if (n == 0) break;
 
+        // Unlike TCP, UDP is connectionless, so we use sendto() to specify the destination address for each packet.
         sendto(socket_fd, buffer, n, 0, (struct sockaddr *)&recv_addr, sizeof(recv_addr));
-        usleep(50000);
+        usleep(50000);  // Sleep for 50ms to control the streaming rate (adjust as needed)
     }
     
     close(socket_fd);

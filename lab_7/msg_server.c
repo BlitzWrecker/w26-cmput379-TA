@@ -1,3 +1,4 @@
+// Original author: Jake Tuero
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <netinet/in.h>
@@ -23,7 +24,7 @@ int open_socket() {
     return socket_fd;
 }
 
-// Assign the
+// Assign the socket to a port
 void bind_socket(int socket_fd, int port_number) {
     // Initialize the data structure
     struct sockaddr_in serv_addr;
@@ -82,7 +83,7 @@ int main(int argc, char *argv[]) {
 
     // Send message to client
     int bytes_written = 0;
-    char reply[512];
+    char reply[521];
     snprintf(reply, sizeof(reply), "You said %s", buffer);
     if ((bytes_written = (int)write(connected_socket_fd, reply, strlen(reply))) < 0) {
         perror("Error writing to socket");

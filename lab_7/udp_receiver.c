@@ -53,6 +53,8 @@ int main(int argc, char *argv[]) {
     int socket_fd = open_socket();
     bind_socket(socket_fd, port_number);
 
+    // Set up audio playback
+    // Adapted from https://alsamodular.sourceforge.net/alsa_programming_howto.html
     snd_pcm_t *pcm;
     snd_pcm_open(&pcm, "default", SND_PCM_STREAM_PLAYBACK, 0);
 
@@ -69,10 +71,16 @@ int main(int argc, char *argv[]) {
     unsigned char buffer[4096];
     int offset = 0;
     while (1) {
+        // Unlike TCP, UDP is connectionless, so we use recvfrom() rather than recv().
         ssize_t n = recvfrom(socket_fd, buffer + offset, 4096, 0, NULL, NULL);
         if (n < 0) {
             error("Error receiving data");
         }
+
+        // Write the received audio data to the PCM device for playback
+        // Note the clicking sound. This is because UDP packets may arrive out of order or be lost, which can cause
+        // audio glitches. In a real application, you would need to implement buffering and error handling to mitigate
+        // this issue.
         snd_pcm_writei(pcm, buffer, n / 2);
     }
 

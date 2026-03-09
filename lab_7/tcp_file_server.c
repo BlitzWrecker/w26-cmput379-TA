@@ -77,6 +77,7 @@ int main(int argc, char *argv[]) {
         error("Error opening file");
     }
 
+    // Read from file and write to socket
     char buffer[512];
     int bytes_read;
     while ((bytes_read = (int)read(file, buffer, sizeof(buffer))) > 0) {
