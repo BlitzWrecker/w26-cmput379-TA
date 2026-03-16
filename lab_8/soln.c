@@ -59,8 +59,6 @@ int main(int argc, char *argv[]) {
     if ((server = gethostbyname(hostname)) == NULL) {
         error("Error: Unable to get host details");
     }
-    // Convert from network byte order to a string IPv4 address
-    char *host_ip = inet_ntoa(*(struct in_addr *)server->h_addr);
 
     // ***Before we run the client, we need to first ensure our server socket is listening for connections
     // Open a socket
@@ -74,7 +72,10 @@ int main(int argc, char *argv[]) {
     printf("Waiting for connections.\n");
 
     for (int i = 0; i < iterations; i++) {
+        // Convert from network byte order to a string IPv4 address
+        char *host_ip = inet_ntoa(*(struct in_addr *)server->h_addr);
         printf("Iteration %d\n", i + 1);
+        printf("Host IP: %s\n", host_ip);
 
         pid_t pid = fork();
         if (pid == -1) {
@@ -82,7 +83,11 @@ int main(int argc, char *argv[]) {
         } else if (pid == 0) {
             // Child process: Run the command to start the client
             printf("Child PID: %d\n", getpid());
+            char command[256];
+            snprintf(command, sizeof(command), "%s %s '%s %s %d &'", ssh_executable, ssh_destination, client_executable, host_ip, port_number);
+            printf("Running command: %s\n", command);
             execve(ssh_executable, (char *const[]){ssh_executable, ssh_destination, client_executable, host_ip, argv[1], NULL}, NULL);
+            exit(1);
         }
 
         // Block process until a client connects to this server
